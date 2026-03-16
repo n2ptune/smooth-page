@@ -1,0 +1,52 @@
+{
+  "name": "@n2ptune/smooth-page",
+  "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "A lightweight smooth full-page scroll JavaScript library",
+  "type": "module",
+  "main": "./dist/smooth-page.umd.js",
+  "module": "./dist/smooth-page.es.js",
+  "style": "./dist/smooth-page.css",
+  "exports": {
+    ".": {
+      "import": "./dist/smooth-page.es.js",
+      "require": "./dist/smooth-page.umd.js",
+      "style": "./dist/smooth-page.css"
+    },
+    "./css": "./dist/smooth-page.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "lint": "eslint src/smooth-page.ts",
+    "lint:fix": "eslint src/smooth-page.ts --fix",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "npm run build && changeset publish",
+    "changeset": "changeset"
+  },
+  "keywords": [
+    "smooth-page",
+    "fullpage",
+    "scroll",
+    "javascript",
+    "library"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@changesets/cli": "^2.30.0",
+    "@types/node": "^25.5.0",
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.6.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.0",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}

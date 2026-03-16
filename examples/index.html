@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smooth Page - Preset Integration Demo</title>
+  <link rel="stylesheet" href="../dist/smooth-page.css">
+  <style>
+    /* Basic demo layout reset */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+    }
+
+    /* Section background images/gradients (for Parallax testing) */
+    .section-1 { background-image: linear-gradient(135deg, #1abc9c, #16a085); }
+    .section-2 { background-image: linear-gradient(135deg, #3498db, #2980b9); }
+    .section-3 { background-image: linear-gradient(135deg, #9b59b6, #8e44ad); }
+    .section-4 { background-image: linear-gradient(135deg, #e67e22, #d35400); }
+
+    .slide-1 { background-color: rgba(52, 152, 219, 0.5); }
+    .slide-2 { background-color: rgba(41, 128, 185, 0.5); }
+    .slide-3 { background-color: rgba(31, 99, 145, 0.5); }
+
+    /* Control Panel */
+    .controls {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 25px;
+      border-radius: 12px;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      width: 250px;
+      backdrop-filter: blur(10px);
+    }
+    .controls h2 { margin: 0 0 20px 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; color: #1abc9c; border-bottom: 1px solid #333; padding-bottom: 10px; }
+    .control-group { margin-bottom: 15px; }
+    .control-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: #999; }
+    .control-group select, .control-group input {
+      width: 100%;
+      height: 40px; /* Fixed height for uniformity */
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #222;
+      color: white;
+      outline: none;
+      box-sizing: border-box; /* Ensure padding doesn't affect width */
+      font-size: 0.9rem;
+      transition: border-color 0.3s ease;
+      appearance: none; /* Remove browser default arrow (optional) */
+    }
+    .control-group select:focus, .control-group input:focus {
+      border-color: #1abc9c;
+    }
+    /* Number input right arrow style cleanup */
+    .control-group input[type=number]::-webkit-inner-spin-button,
+    .control-group input[type=number]::-webkit-outer-spin-button {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="controls">
+    <h2>Smooth Page Settings</h2>
+
+    <div class="control-group">
+      <label for="animation">Animation Preset</label>
+      <select id="animation">
+        <option value="default">Default (Slide)</option>
+        <option value="zoom">Zoom In/Out</option>
+        <option value="slide-up">Slide Up (Stack)</option>
+        <option value="parallax">Parallax Effect</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="speed">Speed (ms)</label>
+      <input type="number" id="speed" value="700" step="100">
+    </div>
+
+    <div class="control-group">
+      <label for="easing">Easing</label>
+      <select id="easing">
+        <option value="ease-in-out">Ease In Out</option>
+        <option value="cubic-bezier(0.68, -0.55, 0.265, 1.55)">Bounce</option>
+        <option value="cubic-bezier(0.86, 0, 0.07, 1)">Expo</option>
+        <option value="cubic-bezier(0.175, 0.885, 0.32, 1.275)">Back Out</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="smooth-page">
+    <section class="sp-section section-1">
+      <div class="content">
+        <h1>Smooth Page</h1>
+        <p>A lightweight smooth full-page scroll JavaScript library.</p>
+      </div>
+    </section>
+
+    <section class="sp-section section-2">
+      <div class="sp-slides">
+        <div class="sp-slide slide-1">
+          <div class="content">
+            <h1>Flexible Layout</h1>
+            <p>Use sp-section and sp-slide classes easily.</p>
+          </div>
+        </div>
+        <div class="sp-slide slide-2">
+          <div class="content">
+            <h1>Customizable</h1>
+            <p>Adjust all options to suit your needs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sp-section section-3">
+      <div class="content">
+        <h1>High Performance</h1>
+        <p>Optimized transform control for seamless scrolling.</p>
+      </div>
+    </section>
+
+    <section class="sp-section section-4">
+      <div class="content">
+        <h1>Ready to use</h1>
+        <p>Apply it to your project right now.</p>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import SmoothPage from '../dist/smooth-page.es.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const sp = new SmoothPage('#smooth-page', {
+        animation: 'default',
+        scrollingSpeed: 700,
+        navigation: true
+      });
+
+      // UI Control Events
+      const animSelect = document.getElementById('animation');
+      const speedInput = document.getElementById('speed');
+      const easingSelect = document.getElementById('easing');
+
+      const updateOptions = () => {
+        sp.setOptions({
+          animation: animSelect.value,
+          scrollingSpeed: parseInt(speedInput.value),
+          easing: easingSelect.value
+        });
+      };
+
+      animSelect.addEventListener('change', updateOptions);
+      speedInput.addEventListener('change', updateOptions);
+      easingSelect.addEventListener('change', updateOptions);
+    });
+  </script>
+</body>
+</html>
