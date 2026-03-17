@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smooth Page - Preset Integration Demo</title>
-  <link rel="stylesheet" href="../src/smooth-page.css">
+  <!-- Resources will be loaded dynamically based on the environment -->
   <style>
     /* Basic demo layout reset */
     html, body {
@@ -145,9 +145,27 @@
   </div>
 
   <script type="module">
-    import SmoothPage from '../src/smooth-page.ts';
+    async function init() {
+      const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      // 1. Load CSS
+      const cssHref = isDev 
+        ? '../src/smooth-page.css' 
+        : 'https://unpkg.com/@n2ptune/smooth-page/dist/smooth-page.css';
+      
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = cssHref;
+      document.head.appendChild(link);
 
-    document.addEventListener('DOMContentLoaded', () => {
+      // 2. Load JS (Dynamic Import)
+      const jsSrc = isDev 
+        ? '../src/smooth-page.ts' 
+        : 'https://unpkg.com/@n2ptune/smooth-page/dist/smooth-page.es.js';
+      
+      const { default: SmoothPage } = await import(jsSrc);
+
+      // 3. Initialize
       const sp = new SmoothPage('#smooth-page', {
         animation: 'default',
         scrollingSpeed: 700,
@@ -170,7 +188,9 @@
       animSelect.addEventListener('change', updateOptions);
       speedInput.addEventListener('change', updateOptions);
       easingSelect.addEventListener('change', updateOptions);
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
