@@ -9,16 +9,16 @@ Check out the live demo: [https://n2ptune.github.io/smooth-page/](https://n2ptun
 
 ### npm
 ```bash
-npm install smooth-page
+npm install @n2ptune/smooth-page
 ```
 
 ### CDN
 ```html
 <!-- Stylesheet -->
-<link rel="stylesheet" href="https://unpkg.com/smooth-page/dist/smooth-page.css">
+<link rel="stylesheet" href="https://unpkg.com/@n2ptune/smooth-page/dist/smooth-page.css">
 
 <!-- Script -->
-<script src="https://unpkg.com/smooth-page/dist/smooth-page.umd.js"></script>
+<script src="https://unpkg.com/@n2ptune/smooth-page/dist/smooth-page.umd.js"></script>
 ```
 
 ## Usage
@@ -27,8 +27,8 @@ npm install smooth-page
 If you are using a bundler like Vite, Webpack, or Rollup:
 
 ```javascript
-import SmoothPage from 'smooth-page';
-import 'smooth-page/css';
+import SmoothPage from '@n2ptune/smooth-page';
+import '@n2ptune/smooth-page/css';
 
 const sp = new SmoothPage('#smooth-page', {
   animation: 'zoom',
@@ -40,7 +40,7 @@ const sp = new SmoothPage('#smooth-page', {
 If you are including the library directly via a `<script>` tag:
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/smooth-page/dist/smooth-page.css">
+<link rel="stylesheet" href="https://unpkg.com/@n2ptune/smooth-page/dist/smooth-page.css">
 
 <div id="smooth-page">
   <section class="sp-section"><h1>Section 1</h1></section>
@@ -52,7 +52,7 @@ If you are including the library directly via a `<script>` tag:
   </section>
 </div>
 
-<script src="https://unpkg.com/smooth-page/dist/smooth-page.umd.js"></script>
+<script src="https://unpkg.com/@n2ptune/smooth-page/dist/smooth-page.umd.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const sp = new SmoothPage('#smooth-page', {
@@ -68,14 +68,26 @@ If you are including the library directly via a `<script>` tag:
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `scrollingSpeed` | `number` | `700` | Speed of the transition animation in milliseconds. |
-| `easing` | `string` | `'ease-in-out'` | CSS transition timing function (e.g., `cubic-bezier`). |
+| `easing` | `string` | `'cubic-bezier(0.645, 0.045, 0.355, 1)'` | CSS transition timing function. |
 | `animation` | `string` | `'default'` | Animation preset: `default`, `zoom`, `slide-up`, `parallax`. |
 | `navigation` | `boolean` | `true` | Whether to show the side dot navigation. |
 | `arrows` | `boolean` | `true` | Whether to show side arrows for horizontal slides. |
 | `onLeave` | `function` | `null` | Callback fired before leaving a section. `(index: number, nextIndex: number) => void` |
 | `afterLoad` | `function` | `null` | Callback fired after a section is loaded. `(index: number) => void` |
-| `onSlideLeave` | `function` | `null` | Callback fired before leaving a horizontal slide. `(sectionIndex: number, slideIndex: number, nextSlideIndex: number) => void` |
-| `afterSlideLoad` | `function` | `null` | Callback fired after a horizontal slide is loaded. `(sectionIndex: number, slideIndex: number) => void` |
+| `onSlideLeave` | `function` | `null` | Callback fired before leaving a horizontal slide. `(sectionIdx: number, slideIdx: number, nextSlideIdx: number) => void` |
+| `afterSlideLoad` | `function` | `null` | Callback fired after a horizontal slide is loaded. `(sectionIdx: number, slideIdx: number) => void` |
+
+## Methods
+
+| Method | Description |
+| --- | --- |
+| `moveTo(index)` | Scrolls the page to the specified section index. |
+| `next()` | Scrolls to the next section. |
+| `prev()` | Scrolls to the previous section. |
+| `moveToSlide(sectionIndex, slideIndex)` | Scrolls to a specific slide within a section. |
+| `moveSlideRight(sectionIndex)` | Scrolls to the next slide in the specified section. |
+| `moveSlideLeft(sectionIndex)` | Scrolls to the previous slide in the specified section. |
+| `setOptions(options)` | Updates the library options dynamically. |
 
 ## Customization
 

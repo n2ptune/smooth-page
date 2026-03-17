@@ -1,3 +1,4 @@
+import './smooth-page.css';
 import { SmoothPageOptions, SlideData } from './types';
 
 /**
