@@ -1,6 +1,6 @@
 {
   "name": "@n2ptune/smooth-page",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publishConfig": {
     "access": "public"
   },
