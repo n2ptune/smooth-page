@@ -1,5 +1,11 @@
 # Smooth Page
 
+[![NPM Version](https://img.shields.io/npm/v/@n2ptune/smooth-page.svg)](https://www.npmjs.com/package/@n2ptune/smooth-page)
+[![NPM Downloads](https://img.shields.io/npm/dm/@n2ptune/smooth-page.svg)](https://www.npmjs.com/package/@n2ptune/smooth-page)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@n2ptune/smooth-page.svg)](https://bundlephobia.com/package/@n2ptune/smooth-page)
+[![License](https://img.shields.io/npm/l/@n2ptune/smooth-page.svg)](https://github.com/n2ptune/smooth-page/blob/main/LICENSE)
+[![Build Status](https://github.com/n2ptune/smooth-page/actions/workflows/ci.yml/badge.svg)](https://github.com/n2ptune/smooth-page/actions)
+
 A lightweight, customizable, and smooth full-page scroll JavaScript/TypeScript library with advanced animation presets. Built with TypeScript for better developer experience and type safety.
 
 ## Demo
