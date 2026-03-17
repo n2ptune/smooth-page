@@ -41,8 +41,8 @@ jobs:
           mkdir -p public
           cp examples/index.html public/
           cp -r dist public/
-          # Fix path in index.html for production (../dist -> ./dist)
-          sed -i 's/\.\.\/dist/\.\/dist/g' public/index.html
+          # Fix path in index.html for production (../src -> ./dist)
+          sed -i 's/\.\.\/src/\.\/dist/g' public/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

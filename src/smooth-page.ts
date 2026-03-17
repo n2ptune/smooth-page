@@ -1,42 +1,24 @@
-import './smooth-page.css';
-
-export interface SmoothPageOptions {
-  scrollingSpeed?: number;
-  easing?: string;
-  animation?: 'default' | 'zoom' | 'slide-up' | 'parallax';
-  navigation?: boolean;
-  arrows?: boolean;
-  onLeave?: (index: number, nextIndex: number) => void;
-  afterLoad?: (index: number) => void;
-  onSlideLeave?: (sectionIndex: number, slideIndex: number, nextSlideIndex: number) => void;
-  afterSlideLoad?: (sectionIndex: number, slideIndex: number) => void;
-}
-
-interface SlideData {
-  container: HTMLElement | null;
-  items: HTMLElement[];
-  currentIndex: number;
-}
+import { SmoothPageOptions, SlideData } from './types';
 
 class SmoothPage {
   private container: HTMLElement;
-  private options: Required<SmoothPageOptions>;
-  private sections: HTMLElement[];
+  private sections: NodeListOf<HTMLElement>;
   private totalSections: number;
   private currentIndex: number = 0;
   private isScrolling: boolean = false;
   private touchStart = { x: 0, y: 0 };
-  private slidesData: SlideData[];
+  private options: Required<SmoothPageOptions>;
   private navLinks: NodeListOf<HTMLAnchorElement> | null = null;
+  private slidesData: SlideData[] = [];
 
   constructor(selector: string, options: SmoothPageOptions = {}) {
     const el = document.querySelector(selector);
-    if (!(el instanceof HTMLElement)) {
-      throw new Error(`SmoothPage: Element '${selector}' not found or is not an HTMLElement.`);
-    }
-    this.container = el;
+    if (!el) throw new Error(`Element ${selector} not found`);
+    this.container = el as HTMLElement;
+    this.sections = this.container.querySelectorAll<HTMLElement>('.sp-section');
+    this.totalSections = this.sections.length;
 
-    this.options = {
+    const defaults: Required<SmoothPageOptions> = {
       scrollingSpeed: 700,
       easing: 'ease-in-out',
       animation: 'default',
@@ -46,26 +28,16 @@ class SmoothPage {
       afterLoad: () => {},
       onSlideLeave: () => {},
       afterSlideLoad: () => {},
-      ...options
-    } as Required<SmoothPageOptions>;
+    };
 
-    this.sections = Array.from(this.container.querySelectorAll<HTMLElement>('.sp-section'));
-    this.totalSections = this.sections.length;
-
-    this.slidesData = this.sections.map(section => {
-      const container = section.querySelector<HTMLElement>('.sp-slides');
-      const items = container ? Array.from(container.querySelectorAll<HTMLElement>('.sp-slide')) : [];
-      return { container, items, currentIndex: 0 };
-    });
-
+    this.options = { ...defaults, ...options };
     this._init();
   }
 
   private _init(): void {
-    document.documentElement.classList.add('sp-activated');
-    document.body.classList.add('sp-activated');
-
     this.container.classList.add('sp-container');
+    document.body.classList.add('sp-activated');
+    
     this.setOptions(this.options);
 
     if (this.options.navigation) this._createNavigation();
@@ -89,10 +61,22 @@ class SmoothPage {
     this.container.classList.remove(...animationClasses);
     this.container.classList.add(`sp-animation-${this.options.animation}`);
 
-    if (this.options.animation === 'slide-up') {
+    if (this.options.animation === 'slide-up' || this.options.animation === 'zoom') {
       this.container.style.transform = 'none';
+    } else {
+      const translateY = -(this.currentIndex * 100);
+      this.container.style.transform = `translateY(${translateY}%)`;
     }
 
+    // Reset all slides to use translateX regardless of preset
+    this.slidesData.forEach(data => {
+      if (data.container) {
+        const translateX = -(data.currentIndex * 100);
+        data.container.style.transform = `translateX(${translateX}%)`;
+      }
+    });
+
+    this.updateActiveState();
     this.applyStyles();
   }
 
@@ -103,13 +87,28 @@ class SmoothPage {
     this.container.style.transition = `transform ${duration} ${easing}`;
     this.sections.forEach(section => {
       section.style.transition = `all ${duration} ${easing}`;
+      
+      // Apply easing to horizontal slides containers as well
+      const slidesContainer = section.querySelector<HTMLElement>('.sp-slides');
+      if (slidesContainer) {
+        slidesContainer.style.transition = `transform ${duration} ${easing}`;
+      }
     });
   }
 
   private _initSlides(): void {
-    this.slidesData.forEach((data, sectionIndex) => {
-      if (data.items.length > 0 && this.options.arrows) {
-        this._createSlideControls(this.sections[sectionIndex], sectionIndex);
+    this.sections.forEach((section, sectionIndex) => {
+      const slidesContainer = section.querySelector<HTMLElement>('.sp-slides');
+      const slides = section.querySelectorAll<HTMLElement>('.sp-slide');
+      
+      this.slidesData[sectionIndex] = {
+        container: slidesContainer,
+        items: Array.from(slides),
+        currentIndex: 0
+      };
+
+      if (slides.length > 0 && this.options.arrows) {
+        this._createSlideControls(section, sectionIndex);
       }
     });
   }
@@ -133,6 +132,7 @@ class SmoothPage {
     const nav = document.createElement('div');
     nav.className = 'sp-nav';
     const ul = document.createElement('ul');
+
     for (let i = 0; i < this.totalSections; i++) {
       const li = document.createElement('li');
       const a = document.createElement('a');
@@ -176,6 +176,7 @@ class SmoothPage {
     event.preventDefault();
     const dx = this.touchStart.x - event.touches[0].clientX;
     const dy = this.touchStart.y - event.touches[0].clientY;
+
     if (Math.abs(dx) > Math.abs(dy)) {
       if (Math.abs(dx) > 50) {
         if (dx > 0) this.moveSlideRight(this.currentIndex);
@@ -197,15 +198,14 @@ class SmoothPage {
     this.currentIndex = index;
 
     this.options.onLeave(prevIndex, index);
+    this.updateActiveState();
 
-    if (this.options.animation !== 'slide-up') {
+    if (this.options.animation !== 'slide-up' && this.options.animation !== 'zoom') {
       const translateY = -(index * 100);
       this.container.style.transform = `translateY(${translateY}%)`;
     } else {
       this.container.style.transform = 'none';
     }
-
-    this.updateActiveState();
 
     setTimeout(() => {
       this.isScrolling = false;
@@ -222,11 +222,11 @@ class SmoothPage {
     data.currentIndex = slideIndex;
 
     this.options.onSlideLeave(sectionIndex, prevSlideIndex, slideIndex);
+    this.updateActiveState();
 
+    // Revert to simple translateX for all slides
     const translateX = -(slideIndex * 100);
     data.container.style.transform = `translateX(${translateX}%)`;
-
-    this.updateActiveState();
 
     setTimeout(() => {
       this.isScrolling = false;
@@ -250,7 +250,6 @@ class SmoothPage {
   private updateActiveState(): void {
     this.sections.forEach((section, i) => {
       section.classList.remove('sp-past', 'sp-future', 'active');
-
       if (i < this.currentIndex) {
         section.classList.add('sp-past');
       } else if (i === this.currentIndex) {
@@ -260,9 +259,9 @@ class SmoothPage {
       }
 
       const data = this.slidesData[i];
-      if (data.items.length > 0) {
+      if (data && data.items.length > 0) {
         data.items.forEach((slide, si) => {
-          slide.classList.toggle('active', i === this.currentIndex && si === data.currentIndex);
+          slide.classList.toggle('active', si === data.currentIndex);
         });
       }
     });

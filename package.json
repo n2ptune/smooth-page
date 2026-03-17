@@ -21,6 +21,7 @@
     "dist"
   ],
   "scripts": {
+    "dev": "vite",
     "build": "vite build",
     "lint": "eslint src/smooth-page.ts",
     "lint:fix": "eslint src/smooth-page.ts --fix",

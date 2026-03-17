@@ -9,6 +9,9 @@ export default defineConfig({
       include: ['src/smooth-page.ts']
     })
   ],
+  server: {
+    open: '/examples/index.html'
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/smooth-page.ts'),

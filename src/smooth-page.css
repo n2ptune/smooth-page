@@ -1,25 +1,42 @@
 :root {
+  /* Transition Defaults */
+  --sp-transition-duration: 0.8s;
+  --sp-transition-easing: cubic-bezier(0.645, 0.045, 0.355, 1);
+  
+  /* Navigation UI */
   --sp-nav-color: rgba(255, 255, 255, 0.3);
   --sp-nav-active-color: #fff;
   --sp-nav-size: 10px;
   --sp-nav-active-scale: 1.8;
+  
+  /* Arrows UI */
   --sp-arrow-bg: rgba(255, 255, 255, 0.15);
   --sp-arrow-hover-bg: rgba(255, 255, 255, 0.3);
   --sp-arrow-size: 50px;
   --sp-arrow-color: #fff;
-  --sp-transition-duration: 0.7s;
+}
+
+/* Base Styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .sp-activated {
   overflow: hidden !important;
 }
 
+/* Main Containers */
 .sp-container {
   position: relative;
   width: 100%;
   height: 100%;
   touch-action: none;
-  transition: transform var(--sp-transition-duration) ease-in-out;
+  transition: transform var(--sp-transition-duration) var(--sp-transition-easing);
+  will-change: transform;
 }
 
 .sp-section {
@@ -27,12 +44,28 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  color: #fff;
-  background-size: cover;
-  background-position: center;
-  transition: all var(--sp-transition-duration) ease;
+  flex-shrink: 0;
+  transition: transform var(--sp-transition-duration) var(--sp-transition-easing), 
+              opacity var(--sp-transition-duration) var(--sp-transition-easing);
+  will-change: transform, opacity;
 }
 
+.sp-slides {
+  position: relative;
+  height: 100%;
+  display: flex;
+  transition: transform var(--sp-transition-duration) var(--sp-transition-easing);
+  will-change: transform;
+}
+
+.sp-slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+/* Content Staggering */
 .content {
   position: absolute;
   top: 50%;
@@ -41,53 +74,53 @@
   text-align: center;
   width: 80%;
   z-index: 10;
+  color: #fff;
 }
 
 .content h1, .content p {
   opacity: 0;
-  transform: translateY(50px);
-  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateY(30px);
+  transition: transform 0.8s var(--sp-transition-easing), 
+              opacity 0.8s var(--sp-transition-easing);
 }
 
-.sp-section.active .content h1,
-.sp-section.active .content p,
-.sp-slide.active .content h1,
-.sp-slide.active .content p {
+.active .content h1,
+.active .content p {
   opacity: 1;
   transform: translateY(0);
 }
 
-.sp-section.active .content p,
-.sp-slide.active .content p {
-  transition-delay: 0.2s;
-}
+.active .content h1 { transition-delay: 0.2s; }
+.active .content p { transition-delay: 0.3s; }
 
-.sp-animation-default .sp-container {
-  transition-timing-function: ease-in-out;
-}
-
+/* Preset: Zoom */
 .sp-animation-zoom .sp-section {
+  position: absolute;
+  top: 0;
+  left: 0;
   opacity: 0;
-  transform: scale(0.7);
+  transform: scale(1.2);
+  pointer-events: none;
 }
 
 .sp-animation-zoom .sp-section.active {
   opacity: 1;
   transform: scale(1);
+  pointer-events: auto;
+  z-index: 5;
 }
 
+.sp-animation-zoom .sp-section.sp-past {
+  transform: scale(0.8);
+  opacity: 0;
+}
+
+/* Preset: Slide Up */
 .sp-animation-slide-up .sp-section {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
   transform: translateY(100%);
-  z-index: 1;
-}
-
-.sp-animation-slide-up .sp-section.sp-past {
-  transform: translateY(0);
   z-index: 1;
 }
 
@@ -96,58 +129,38 @@
   z-index: 5;
 }
 
-.sp-animation-slide-up .sp-section.sp-future {
-  transform: translateY(100%);
-  z-index: 10;
+.sp-animation-slide-up .sp-section.sp-past {
+  transform: scale(0.95);
+  opacity: 0.6;
+  z-index: 1;
 }
 
+/* Preset: Parallax */
 .sp-animation-parallax .sp-section {
-  background-position: center 0;
-  transition: background-position var(--sp-transition-duration) ease, transform var(--sp-transition-duration) ease;
-}
-
-.sp-animation-parallax .sp-section.sp-past {
-  background-position: center 30%;
-}
-
-.sp-animation-parallax .sp-section.active {
+  background-size: cover;
   background-position: center center;
 }
 
-.sp-animation-parallax .sp-section.sp-future {
-  background-position: center 70%;
-}
+.sp-animation-parallax .sp-section.sp-past { background-position: center 20%; }
+.sp-animation-parallax .sp-section.sp-future { background-position: center 80%; }
 
-.sp-slides {
-  position: relative;
-  height: 100%;
-  display: flex;
-  transition: transform var(--sp-transition-duration) ease-in-out;
-}
-
-.sp-slide {
-  width: 100%;
-  flex-shrink: 0;
-  height: 100%;
-  position: relative;
-}
-
+/* UI: Control Arrows */
 .sp-control-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  cursor: pointer;
   z-index: 100;
   width: var(--sp-arrow-size);
   height: var(--sp-arrow-size);
   border: none;
   background: var(--sp-arrow-bg);
   color: var(--sp-arrow-color);
-  font-size: calc(var(--sp-arrow-size) * 0.48);
+  font-size: calc(var(--sp-arrow-size) * 0.4);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
   backdrop-filter: blur(5px);
   transition: background 0.3s ease, transform 0.3s ease;
 }
@@ -160,6 +173,7 @@
 .sp-control-arrow.sp-prev { left: 30px; }
 .sp-control-arrow.sp-next { right: 30px; }
 
+/* UI: Side Navigation */
 .sp-nav {
   position: fixed;
   right: 30px;
@@ -176,7 +190,7 @@
   height: var(--sp-nav-size);
   border-radius: 50%;
   background: var(--sp-nav-color);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, background 0.3s ease;
 }
 
 .sp-nav a.active {
