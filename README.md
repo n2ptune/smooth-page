@@ -2,6 +2,9 @@
 
 A lightweight, customizable, and smooth full-page scroll JavaScript/TypeScript library with advanced animation presets. Built with TypeScript for better developer experience and type safety.
 
+## Demo
+Check out the live demo: [https://n2ptune.github.io/smooth-page/](https://n2ptune.github.io/smooth-page/)
+
 ## Installation
 
 ### npm
@@ -69,14 +72,14 @@ If you are including the library directly via a `<script>` tag:
 | `animation` | `string` | `'default'` | Animation preset: `default`, `zoom`, `slide-up`, `parallax`. |
 | `navigation` | `boolean` | `true` | Whether to show the side dot navigation. |
 | `arrows` | `boolean` | `true` | Whether to show side arrows for horizontal slides. |
-| `onLeave` | `function` | `null` | Callback fired before leaving a section. `(index, nextIndex) => {}` |
-| `afterLoad` | `function` | `null` | Callback fired after a section is loaded. `(index) => {}` |
-| `onSlideLeave` | `function` | `null` | Callback fired before leaving a horizontal slide. |
-| `afterSlideLoad` | `function` | `null` | Callback fired after a horizontal slide is loaded. |
+| `onLeave` | `function` | `null` | Callback fired before leaving a section. `(index: number, nextIndex: number) => void` |
+| `afterLoad` | `function` | `null` | Callback fired after a section is loaded. `(index: number) => void` |
+| `onSlideLeave` | `function` | `null` | Callback fired before leaving a horizontal slide. `(sectionIndex: number, slideIndex: number, nextSlideIndex: number) => void` |
+| `afterSlideLoad` | `function` | `null` | Callback fired after a horizontal slide is loaded. `(sectionIndex: number, slideIndex: number) => void` |
 
 ## Customization
 
-You can easily customize the appearance of navigation dots and arrows using CSS variables. Overwrite them in your global CSS:
+You can easily customize the appearance of navigation dots and arrows using CSS variables. Override them in your global CSS:
 
 ```css
 :root {

@@ -177,9 +177,15 @@ class SmoothPage {
     const dx = this.touchStart.x - event.touches[0].clientX;
     const dy = this.touchStart.y - event.touches[0].clientY;
     if (Math.abs(dx) > Math.abs(dy)) {
-      if (Math.abs(dx) > 50) dx > 0 ? this.moveSlideRight(this.currentIndex) : this.moveSlideLeft(this.currentIndex);
+      if (Math.abs(dx) > 50) {
+        if (dx > 0) this.moveSlideRight(this.currentIndex);
+        else this.moveSlideLeft(this.currentIndex);
+      }
     } else {
-      if (Math.abs(dy) > 50) dy > 0 ? this.next() : this.prev();
+      if (Math.abs(dy) > 50) {
+        if (dy > 0) this.next();
+        else this.prev();
+      }
     }
   }
 
